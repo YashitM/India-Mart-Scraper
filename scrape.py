@@ -26,13 +26,13 @@ def getCategories():
 	# for i in categories_dictionary:
 	# 	print(i + ": " + categories_dictionary[i])
 
-def getSubcategories(categoryURL):
+def getSubcategories(categoryName, categoryURL):
 	r = requests.get(categoryURL)
 	html = r.content
 
 	soup = BeautifulSoup(html, "html.parser")
 
-	print ("[+] Finding subCategories of " + )
+	print ("[+] Finding subCategories of " + categoryName)
 	ulOfSubCategories = soup.find_all("ul", {"class": "grouplist"})
 	subCategories_dictionary = dict()
 
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 	j = 0
 	for i in categories:
 		# j += 1
-		subCategories[i] = getSubcategories(categories[i])
+		subCategories[i] = getSubcategories(i, categories[i])
 
 	for i in subCategories:
 		print (i)
