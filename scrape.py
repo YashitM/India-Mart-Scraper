@@ -63,18 +63,37 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 	item_dictionary = dict()
 
 	for div in itemDiv:
+		location = "-"
+		capacity = "-"
+		quantity = "-"
+		quantity_unit = "-"
+		need_for_this = "-" #along with usage
+		usage = "-"
+		frequency = "-"
+
+
 		itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1 mb"}).find("a").text
+		location = div.find("span", {"class": "latestBLBg crdLocation"}).text
 		print(itemName)
+		print(location)
+		date = div.find("span", {"class": "dtt updatedTime"}).text
+		print(date)
+		other_details = div.find("div", {"class": "c15 pt4 fs pl"})
+		for table_row in div.find_all("tr"):
+			print(table_row.text)
+
+		
+
 
 if __name__ == '__main__':
 	categories = getCategories()
 	subCategories = dict()
 	j = 0
 	for i in categories:
-		# j += 1
+		j += 1
 		subCategories[i] = getSubcategories(i, categories[i])
-		# if j==2:
-		# 	break
+		if j==2:
+			break
 
 	# for i in subCategories:
 	# 	print (i)
