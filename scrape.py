@@ -50,6 +50,22 @@ def getSubcategories(categoryName, categoryURL):
 	for i in subCategories_dictionary:
 		print (i + ": " + subCategories_dictionary[i])
 
+def getItems(categoryName, subCategoryName, subCategoryURL):
+	r = requests.get(subCategoryURL)
+	html = r.content
+
+	soup = BeautifulSoup(html, "html.parser")
+
+	print ("[+] Getting items in " + categoryName + "->" + subCategoryName)
+
+	#get Divs
+	itemDiv = soup.find_all("div", {"class": "blockdiv"})
+	item_dictionary = dict()
+
+	for div in itemDiv:
+		itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1 mb"}).find("a").text
+		print(itemName)
+
 if __name__ == '__main__':
 	categories = getCategories()
 	subCategories = dict()
@@ -57,7 +73,15 @@ if __name__ == '__main__':
 	for i in categories:
 		# j += 1
 		subCategories[i] = getSubcategories(i, categories[i])
+		# if j==2:
+		# 	break
+
+	# for i in subCategories:
+	# 	print (i)
+	# 	print (subCategories[i])
 
 	for i in subCategories:
-		print (i)
-		print (subCategories[i])
+		for j in subCategories[i]:
+			# print(i + "   i")
+			# print(subCategories[i][j])
+			getItems(i,j,subCategories[i][j])
