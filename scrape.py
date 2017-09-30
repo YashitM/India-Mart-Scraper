@@ -31,8 +31,8 @@ def getSubcategories(categoryName, categoryURL):
 def getItems(categoryName, subCategoryName, subCategoryURL):
 	soup = BeautifulSoup(requests.get(subCategoryURL).content, "html.parser")
 	print ("[+] Getting items in " + categoryName + "->" + subCategoryName)
-	# itemDiv = soup.find_all("div", {"class": "blockdiv"})
-	itemDiv = soup.find_all("div", {"class": "trade-list"})
+	itemDiv = soup.find_all("div", {"class": "blockdiv"})
+	# itemDiv = soup.find_all("div", {"class": "trade-list"})
 	item_dictionary = dict()
 	for div in itemDiv:
 		location = "-"
@@ -40,29 +40,49 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 		quantity_unit = "-"
 		quantity = "-"
 		need_for_this = "-"
-		usage = "-"
 		frequency = "-"
 		# itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1 mb"}).find("a").text
 		itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1"}).find("a").text
 		# location = div.find("span", {"class": "latestBLBg crdLocation"}).text
-		location = div.find("span", {"class": "bl_ccname location"}).text
-		date = div.find("span", {"class": "dtt updatedTime"}).text
+		location = div.find("span", {"class": "bl_ccname location"}).text.lstrip()
+		date = div.find("span", {"class": "dtt updatedTime"}).text.lstrip()
 		print("Name: " + itemName)
 		print("Location: " + location)
 		print("Date: " + date)
+		
 		other_details = dict()
 
+		other_details["Location"] = location
+		other_details["Date"] = date
+		j = 0
 		if div.find("div", {"class": "c15 pt4 fs pl"}) != None:
 			for table_row in div.find("div", {"class": "c15 pt4 fs pl"}).find_all("tr"):
+				j+=1
 				data = table_row.text.replace("\n","").split(":")
-				if data[0] == "Quantity":
-					quantity = data[1].split(" ")[0].lstrip()
-					quantity_unit = data[1].split(" ")[1].lstrip()
-				print(data)
-
-			# other_details["lol"] = data
-
-		print(other_details)
+				if j==3:
+					break
+				if "capacity" in data[0].lower():
+					capacity = data[1].lstrip()
+					other_details["Capacity"] = capacity
+				if "unit" in data[0].lower():
+					quantity_unit = data[1].lstrip()
+					other_details["Quantity Unit"] = quantity_unit
+				if "quantity" in data[0].lower():
+					if len(data[1].split(" ")) == 2:
+						quantity = data[1].split(" ")[0].lstrip()
+						quantity_unit = data[1].split(" ")[1].lstrip()
+						other_details["Quantity"] = quantity
+						other_details["Quantity Unit"] = quantity_unit
+					else:
+						quantity = data[1].lstrip()
+						other_details["Quantity"] = quantity
+				if "need" in data[0].lower() or "usage" in data[0].lower():
+					need_for_this = data[1].lstrip()
+					other_details["Need/Usage"] = need_for_this
+				if "frequency" in data[0].lower():
+					frequency = data[1].lstrip()
+					other_details["Frequency"] = frequency
+		item_dictionary[itemName] = other_details
 
 if __name__ == '__main__':
 	categories = getCategories()
