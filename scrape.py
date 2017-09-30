@@ -83,6 +83,14 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 					frequency = data[1].lstrip()
 					other_details["Frequency"] = frequency
 		item_dictionary[itemName] = other_details
+		print (itemName, item_dictionary[itemName])
+
+def writeToExcel(itemNumber, dictToWrite, row, worksheet):
+	worksheet.write(row, 1, itemNumber)
+	j = 2
+	for i in dictionary.values():
+		worksheet.write(row, j, i)
+		j += 1
 
 if __name__ == '__main__':
 	categories = getCategories()
@@ -94,6 +102,13 @@ if __name__ == '__main__':
 		if j==2:
 			break
 
+	itemNumber = 1
+	import xlsxwriter
+	workbook = xlsxwriter.Workbook('Expenses01.xlsx')
+	worksheet = workbook.add_worksheet()
 	for i in subCategories:
 		for j in subCategories[i]:
-			getItems(i,j,subCategories[i][j])
+			dictToWrite = getItems(i,j,subCategories[i][j])
+			writeToExcel(itemNumber, dictToWrite, itemNumber + 1, worksheet)
+			break
+	workbook.close()
