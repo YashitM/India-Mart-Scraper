@@ -114,11 +114,15 @@ if __name__ == '__main__':
 	workbook = xlsxwriter.Workbook('Expenses01.xlsx')
 	worksheet = workbook.add_worksheet()
 	writeHeadingToExcel(worksheet)
-	for i in subCategories:
-		for j in subCategories[i]:
-			dictToWrite = getItems(i,j,subCategories[i][j])
-			newDictionary = dict()
-			for j in dictToWrite:
-				print(j)
-				writeToExcel(itemNumber, dictToWrite[j], itemNumber + 1, worksheet)
+	try:
+		for i in subCategories:
+			for j in subCategories[i]:
+				dictToWrite = getItems(i,j,subCategories[i][j])
+				newDictionary = dict()
+				for j in dictToWrite:
+					print(j)
+					writeToExcel(itemNumber, dictToWrite[j], itemNumber + 1, worksheet)
+					itemNumber += 1
+	except KeyboardInterrupt:
+		pass
 	workbook.close()
