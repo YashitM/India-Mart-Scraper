@@ -86,7 +86,8 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 				if "frequency" in data[0].lower():
 					frequency = data[1].lstrip()
 					other_details["Frequency"] = frequency
-		return other_details
+				item_dictionary[itemName] = other_details
+		return item_dictionary
 		
 def writeToExcel(itemNumber, dictToWrite, row, worksheet):
 	worksheet.write(row, 1, itemNumber)
