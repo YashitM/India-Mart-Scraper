@@ -29,60 +29,70 @@ def getSubcategories(categoryName, categoryURL):
 	return subCategories_dictionary
 
 def getItems(categoryName, subCategoryName, subCategoryURL):
-	soup = BeautifulSoup(requests.get(subCategoryURL).content, "html.parser")
-	print ("[+] Getting items in " + categoryName + "->" + subCategoryName)
-	itemDiv = soup.find_all("div", {"class": "blockdiv"})
-	# itemDiv = soup.find_all("div", {"class": "trade-list"})
-	item_dictionary = dict()
-	for div in itemDiv:
-		location = "-"
-		capacity = "-"
-		quantity_unit = "-"
-		quantity = "-"
-		need_for_this = "-"
-		frequency = "-"
+	page_number = 0
+	while True:
+		if page_number == 0:
+			soup = BeautifulSoup(requests.get(subCategoryURL).content, "html.parser")
+		else:
+			request = requests.get(subCategoryURL+"/buy"+str(page_number)+".html")
+			if request.status_code == 200:
+				soup = BeautifulSoup(request.content, "html.parser")
+			else:
+				break
+		print ("[+] Getting items in " + categoryName + "->" + subCategoryName)
+		itemDiv = soup.find_all("div", {"class": "blockdiv"})
+		# itemDiv = soup.find_all("div", {"class": "trade-list"})
+		item_dictionary = dict()
+		for div in itemDiv:
+			location = "-"
+			capacity = "-"
+			quantity_unit = "-"
+			quantity = "-"
+			need_for_this = "-"
+			frequency = "-"
 
-		itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1"}).find("a").text
-		location = div.find("span", {"class": "bl_ccname location"}).text.lstrip()
-		date = div.find("span", {"class": "dtt updatedTime"}).text.lstrip()
-		
-		other_details = dict()
+			itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1"}).find("a").text
+			location = div.find("span", {"class": "bl_ccname location"}).text.lstrip()
+			date = div.find("span", {"class": "dtt updatedTime"}).text.lstrip()
+			
+			other_details = dict()
 
-		other_details["Date"] = date
-		other_details["Category"] = categoryName
-		other_details["Item"] = itemName
-		other_details["Location"] = location
-		other_details["Capacity"] = "-"
-		other_details["Quantity"] = "-"
-		other_details["Quantity Unit"] = "-"
-		other_details["Need/Usage"] = "-"
-		other_details["Frequency"] = "-"
+			other_details["Date"] = date
+			other_details["Category"] = categoryName
+			other_details["Item"] = itemName
+			other_details["Location"] = location
+			other_details["Capacity"] = "-"
+			other_details["Quantity"] = "-"
+			other_details["Quantity Unit"] = "-"
+			other_details["Need/Usage"] = "-"
+			other_details["Frequency"] = "-"
 
-		flag_no_unit_check = False
+			flag_no_unit_check = False
 
-		if div.find("div", {"class": "c15 pt4 fs pl"}) != None:
-			for table_row in div.find("div", {"class": "c15 pt4 fs pl"}).find_all("tr"):
-				data = table_row.text.replace("\n","").split(":")
-				if "capacity" in data[0].lower():
-					capacity = data[1].lstrip()
-					other_details["Capacity"] = capacity
-				if len(data[0].lower().split(" ")) == 2 and "unit" in data[0].lower():
-					quantity_unit = data[1].lstrip()
-					flag_no_unit_check = True
-					other_details["Quantity Unit"] = quantity_unit
-				if "quantity" in data[0].lower() and len(data[0].lower().split(" ")) != 2:
-					quantity = data[1].lstrip().split(" ")[0]
-					other_details["Quantity"] = quantity
-					if not flag_no_unit_check and len(data[1].lstrip().split(" ")) > 1:
-						quantity_unit = data[1].lstrip().split(" ")[1]
+			if div.find("div", {"class": "c15 pt4 fs pl"}) != None:
+				for table_row in div.find("div", {"class": "c15 pt4 fs pl"}).find_all("tr"):
+					data = table_row.text.replace("\n","").split(":")
+					if "capacity" in data[0].lower():
+						capacity = data[1].lstrip()
+						other_details["Capacity"] = capacity
+					if len(data[0].lower().split(" ")) == 2 and "unit" in data[0].lower():
+						quantity_unit = data[1].lstrip()
+						flag_no_unit_check = True
 						other_details["Quantity Unit"] = quantity_unit
-				if "need" in data[0].lower() or "usage" in data[0].lower():
-					need_for_this = data[1].lstrip()
-					other_details["Need/Usage"] = need_for_this
-				if "frequency" in data[0].lower():
-					frequency = data[1].lstrip()
-					other_details["Frequency"] = frequency
-				item_dictionary[itemName] = other_details
+					if "quantity" in data[0].lower() and len(data[0].lower().split(" ")) != 2:
+						quantity = data[1].lstrip().split(" ")[0]
+						other_details["Quantity"] = quantity
+						if not flag_no_unit_check and len(data[1].lstrip().split(" ")) > 1:
+							quantity_unit = data[1].lstrip().split(" ")[1]
+							other_details["Quantity Unit"] = quantity_unit
+					if "need" in data[0].lower() or "usage" in data[0].lower():
+						need_for_this = data[1].lstrip()
+						other_details["Need/Usage"] = need_for_this
+					if "frequency" in data[0].lower():
+						frequency = data[1].lstrip()
+						other_details["Frequency"] = frequency
+					item_dictionary[itemName] = other_details
+		page_number+=1
 	return item_dictionary
 		
 def writeToExcel(itemNumber, dictToWrite, row, worksheet):
@@ -120,9 +130,10 @@ if __name__ == '__main__':
 				dictToWrite = getItems(i,j,subCategories[i][j])
 				newDictionary = dict()
 				for j in dictToWrite:
-					print(j)
+					print(dictToWrite[j])
 					writeToExcel(itemNumber, dictToWrite[j], itemNumber + 1, worksheet)
 					itemNumber += 1
+					# print(itemNumber)
 	except KeyboardInterrupt:
 		pass
 	workbook.close()
