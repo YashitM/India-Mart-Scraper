@@ -118,7 +118,7 @@ if __name__ == '__main__':
 		for j in subCategories[i]:
 			dictToWrite = getItems(i,j,subCategories[i][j])
 			newDictionary = dict()
-			for i in dictToWrite:
-				print(i)
-				writeToExcel(itemNumber, i, itemNumber + 1, worksheet)
+			for j in dictToWrite:
+				print(j)
+				writeToExcel(itemNumber, dictToWrite[j], itemNumber + 1, worksheet)
 	workbook.close()
