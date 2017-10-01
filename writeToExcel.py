@@ -1,6 +1,12 @@
-dictToWrite = {'Date' : '30 Sep, 2017', 'Category' : 'abcdef', 'Name' : 'MyItem', 'Location' : 'Delhi, India', 'Capacity' : '20', 'Quantity' : '', 'Quantity Unit' : 'Nos', 'Need/Usage' : 'Personal Use', 'Frequency' : '20'}
-dictToWrite2 = {'Date' : '30 Sep, 2017', 'Category' : 'abcdef', 'Name' : 'MyItem', 'Location' : 'Delhi, India', 'Capacity' : '20', 'Quantity' : '', 'Quantity Unit' : 'Nos', 'Need/Usage' : 'Personal Use', 'Frequency' : '20'}
+data = []
 
+with open('dumpData.txt', 'r') as f:
+	for i in f.readlines():
+		if i.find("{") != -1:
+			i = i.lstrip().rstrip('\n')
+			data.append(i)
+
+print (data)
 # print (dictToWrite)
 import xlsxwriter
 workbook = xlsxwriter.Workbook('Expenses01.xlsx')
@@ -14,8 +20,14 @@ def writeDictToExcel(itemNumber, dictionary, row):
 		worksheet.write(row, j, i)
 		j += 1
 
-
-writeDictToExcel(1, dictToWrite, 2)
-writeDictToExcel(2, dictToWrite2, 3)
+import json
+num = 1
+for i in data:
+	x = i.replace("'", "\"")
+	d = json.loads(x)
+	writeDictToExcel(num, d, num)
+	num += 1
+# writeDictToExcel(1, dictToWrite, 2)
+# writeDictToExcel(2, dictToWrite2, 3)
 workbook.close()
 

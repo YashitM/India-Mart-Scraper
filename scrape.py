@@ -95,6 +95,13 @@ def writeToExcel(itemNumber, dictToWrite, row, worksheet):
 		worksheet.write(row, j, i)
 		j += 1
 
+def writeHeadingToExcel(worksheet):
+	heading = ['S.No', 'Date', 'Category', 'Item', 'Location', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
+	j = 1
+	for i in heading:
+		worksheet.write(1, j, i)
+		j += 1
+
 if __name__ == '__main__':
 	categories = getCategories()
 	subCategories = dict()
@@ -102,13 +109,14 @@ if __name__ == '__main__':
 	for i in categories:
 		j += 1
 		subCategories[i] = getSubcategories(i, categories[i])
-		if j==2:
+		if j==1:
 			break
 
 	itemNumber = 1
 	import xlsxwriter
 	workbook = xlsxwriter.Workbook('Expenses01.xlsx')
 	worksheet = workbook.add_worksheet()
+	writeHeadingToExcel(worksheet)
 	for i in subCategories:
 		for j in subCategories[i]:
 			dictToWrite = getItems(i,j,subCategories[i][j])

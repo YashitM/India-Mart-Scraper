@@ -1,0 +1,53 @@
+[*] Categories found!
+[+] Finding Sub Categories of Electronics & Electrical
+[+] Getting items in Electronics & Electrical->Adhesive & Pressure Sensitive Tapes
+['', '1000']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Teflon sealing Tapes', 'Location': 'Bhubaneswar, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '1000', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Automobile Electrical Components 
+['', '1']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Yufeng E Rickshaw Motor', 'Location': 'Delhi, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '1', 'Need/Usage': 'For E Rickshaw', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Batteries & Charge Storage Devices
+['', 'Pieces']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Power Touch Inverter Tubular Battery', 'Location': 'Betul, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': 'Pieces', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Biometrics & Access Control Devices
+['', '1']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Aadhar Kit', 'Location': 'Gurgaon, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '1', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->CCTV, Surveillance Systems and Parts
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'CCTV Camera', 'Location': 'Dhaka, Bangladesh', 'Capacity': '-', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Camera & Photography Equipments
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Canon EOS DSLR Body', 'Location': 'Nagapattinam, India', 'Capacity': '-', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Decorative Light, Lamp & Lamp Shades
+['', '1']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Latest Jhoomer Light', 'Location': 'Kota, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '1', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Diodes & Electronic Active Devices
+['', '1000']
+['', 'Nos']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'LED Raw Material', 'Location': 'Anakapalli, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': 'Nos', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Domestic Fans, AC & Coolers
+['', '4']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Gorilla Ceiling Fan and Blade less Fan', 'Location': 'Vijayawada, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '4', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electric Circuit Components & Spares
+['', '1']
+['', 'Nos']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Crystal Oscillator', 'Location': 'Agra, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': 'Nos', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electric Fittings & Components
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Electric Fan Box', 'Location': 'Amritsar, India', 'Capacity': '-', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electric Motors and Components
+['', '5']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Bonfiglioli Geared Motor', 'Location': 'Gurgaon, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '5', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electrical & Electronic Connectors
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Spike Guard', 'Location': 'Navi Mumbai, India', 'Capacity': '-', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electrical & Electronic Goods Rental
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Laptop Rentals Service', 'Location': 'New Delhi, India', 'Capacity': '4 GB', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electrical & Electronic Goods Repair
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Water Purifier Service', 'Location': 'Bhopal, India', 'Capacity': '-', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electrical & Electronic Test Devices
+['', '1']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Cable Route Locator', 'Location': 'Bhopal, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '1', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electrical & Signaling Contractors
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Commercial Electrical Contractor', 'Location': 'Mumbai, India', 'Capacity': '-', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electrical Cables & Wires
+['', '1']
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Havells Solar DC Wire', 'Location': 'Delhi, India', 'Capacity': '-', 'Quantity': '', 'Quantity Unit': '1', 'Need/Usage': '-', 'Frequency': '-'}
+[+] Getting items in Electronics & Electrical->Electrical Conduits and Fittings 
+{'Date': '01 Oct, 2017  ', 'Category': 'Electronics & Electrical', 'Item': 'Steel Double Interlock Flexible Conduit Pipe', 'Location': 'Bengaluru, India', 'Capacity': '-', 'Quantity': '-', 'Quantity Unit': '-', 'Need/Usage': '-', 'Frequency': '-'}
