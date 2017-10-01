@@ -57,29 +57,25 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 		other_details["Quantity Unit"] = "-"
 		other_details["Need/Usage"] = "-"
 		other_details["Frequency"] = "-"
-		j = 0
+
+		flag_no_unit_check = False
+
 		if div.find("div", {"class": "c15 pt4 fs pl"}) != None:
 			for table_row in div.find("div", {"class": "c15 pt4 fs pl"}).find_all("tr"):
-				j+=1
 				data = table_row.text.replace("\n","").split(":")
-				if j==3:
-					break
 				if "capacity" in data[0].lower():
 					capacity = data[1].lstrip()
 					other_details["Capacity"] = capacity
-				if "unit" in data[0].lower():
+				if len(data[0].lower().split(" ")) == 2 and "unit" in data[0].lower():
 					quantity_unit = data[1].lstrip()
+					flag_no_unit_check = True
 					other_details["Quantity Unit"] = quantity_unit
-				if "quantity" in data[0].lower():
-					if len(data[1].split(" ")) == 2:
-						print(data[1].split(" "))
-						quantity = data[1].split(" ")[0].lstrip()
-						quantity_unit = data[1].split(" ")[1].lstrip()
-						other_details["Quantity"] = quantity
+				if "quantity" in data[0].lower() and len(data[0].lower().split(" ")) != 2:
+					quantity = data[1].lstrip().split(" ")[0]
+					other_details["Quantity"] = quantity
+					if not flag_no_unit_check and len(data[1].lstrip().split(" ")) > 1:
+						quantity_unit = data[1].lstrip().split(" ")[1]
 						other_details["Quantity Unit"] = quantity_unit
-					else:
-						quantity = data[1].lstrip()
-						other_details["Quantity"] = quantity
 				if "need" in data[0].lower() or "usage" in data[0].lower():
 					need_for_this = data[1].lstrip()
 					other_details["Need/Usage"] = need_for_this
@@ -87,7 +83,7 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 					frequency = data[1].lstrip()
 					other_details["Frequency"] = frequency
 				item_dictionary[itemName] = other_details
-		return item_dictionary
+	return item_dictionary
 		
 def writeToExcel(itemNumber, dictToWrite, row, worksheet):
 	worksheet.write(row, 1, itemNumber)
@@ -121,7 +117,8 @@ if __name__ == '__main__':
 	for i in subCategories:
 		for j in subCategories[i]:
 			dictToWrite = getItems(i,j,subCategories[i][j])
-			print(dictToWrite)
-			writeToExcel(itemNumber, dictToWrite, itemNumber + 1, worksheet)
-			break
+			newDictionary = dict()
+			for i in dictToWrite:
+				print(i)
+				writeToExcel(itemNumber, i, itemNumber + 1, worksheet)
 	workbook.close()
