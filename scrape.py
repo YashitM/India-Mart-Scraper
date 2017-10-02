@@ -39,7 +39,7 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 				soup = BeautifulSoup(request.content, "html.parser")
 			else:
 				break
-		print ("[+] Getting items in " + categoryName + "->" + subCategoryName)
+		print ("[+] Getting items in " + categoryName + "->" + subCategoryName + str(page_number))
 		itemDiv = soup.find_all("div", {"class": "blockdiv"})
 		# itemDiv = soup.find_all("div", {"class": "trade-list"})
 		item_dictionary = dict()
@@ -59,6 +59,7 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 
 			other_details["Date"] = date
 			other_details["Category"] = categoryName
+			other_details["Sub Category"] = subCategoryName
 			other_details["Item"] = itemName
 			other_details["Location"] = location
 			other_details["Capacity"] = "-"
@@ -103,7 +104,7 @@ def writeToExcel(itemNumber, dictToWrite, row, worksheet):
 		j += 1
 
 def writeHeadingToExcel(worksheet):
-	heading = ['S.No', 'Date', 'Category', 'Item', 'Location', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
+	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'Location', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
 	j = 1
 	for i in heading:
 		worksheet.write(1, j, i)
@@ -114,10 +115,7 @@ if __name__ == '__main__':
 	subCategories = dict()
 	j = 0
 	for i in categories:
-		j += 1
 		subCategories[i] = getSubcategories(i, categories[i])
-		if j==1:
-			break
 
 	itemNumber = 1
 	import xlsxwriter
@@ -130,10 +128,10 @@ if __name__ == '__main__':
 				dictToWrite = getItems(i,j,subCategories[i][j])
 				newDictionary = dict()
 				for j in dictToWrite:
-					print(dictToWrite[j])
+					# print(dictToWrite[j])
 					writeToExcel(itemNumber, dictToWrite[j], itemNumber + 1, worksheet)
 					itemNumber += 1
-					# print(itemNumber)
+					print(itemNumber)
 	except KeyboardInterrupt:
 		pass
 	workbook.close()
