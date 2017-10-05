@@ -34,10 +34,7 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 		if page_number == 0:
 			soup = BeautifulSoup(requests.get(subCategoryURL).content, "html.parser")
 		else:
-			request = requests.get(subCategoryURL+"/buy"+str(page_number)+".html")
-			if request.status_code == 200:
-				soup = BeautifulSoup(request.content, "html.parser")
-			else:
+			if "No Buy Leads" in requests.get(subCategoryURL+"/buy"+str(page_number)+".html").content:
 				break
 		print ("[+] Getting items in " + categoryName + "->" + subCategoryName + str(page_number))
 		itemDiv = soup.find_all("div", {"class": "blockdiv"})
