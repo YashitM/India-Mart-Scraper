@@ -1,6 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 
+# Change it to false to run the script completely
+testing = True
+# FileName of excel file
+excelFileName = "ExcelFile.xlsx"
+
+firstItemsEachCategory = []
+
 def getCategories():
 	soup = BeautifulSoup(requests.get("https://trade.indiamart.com").content, "html.parser")
 	categories_dictionary = dict()
@@ -29,6 +36,9 @@ def getSubcategories(categoryName, categoryURL):
 	return subCategories_dictionary
 
 def getItems(categoryName, subCategoryName, subCategoryURL):
+	data = readFirstItemFromFile()
+	stopSubCat = False
+	firstItem = True
 	page_number = 0
 	while True:
 		if page_number == 0:
@@ -93,22 +103,52 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 						frequency = data[1].lstrip()
 						other_details["Frequency"] = frequency
 					item_dictionary[itemName] = other_details
+				if firstItem:
+					firstItemsEachCategory.append(itemName)
+					firstItem = False
+				else:
+					if data != []:
+						for i in data:
+							if itemName == i:
+								stopSubCat = True
+								break
+		if stopSubCat:
+			break
+
 		page_number+=1
+		if testing:
+			break
 	return item_dictionary
 		
 def writeToExcel(itemNumber, dictToWrite, row, worksheet):
-	worksheet.write(row, 1, itemNumber)
+	# worksheet.write(row, 1, itemNumber)
+	ws.cell(row = row, column = 1).value = itemNumber
 	j = 2
 	for i in dictToWrite.values():
-		worksheet.write(row, j, i)
+		ws.cell(row = row, column = j).value = i
 		j += 1
 
 def writeHeadingToExcel(worksheet):
 	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'Location', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
 	j = 1
 	for i in heading:
-		worksheet.write(1, j, i)
+		ws.cell(row = 1, column = j).value = i
 		j += 1
+
+def writeFirstItemToFile(firstItemList):
+	import pickle
+	with open("firstItemHelper.txt", "wb") as fp:
+		pickle.dump(firstItemList, fp)
+
+def readFirstItemFromFile():
+	import pickle
+	data = []
+	try:
+		with open("firstItemHelper.txt", "wb") as fp:
+			data = pickle.load(fp)
+	except:
+		pass
+	return data
 
 if __name__ == '__main__':
 	categories = getCategories()
@@ -116,12 +156,18 @@ if __name__ == '__main__':
 	j = 0
 	for i in categories:
 		subCategories[i] = getSubcategories(i, categories[i])
+		if testing:
+			break
+
+
 
 	itemNumber = 1
-	import xlsxwriter
-	workbook = xlsxwriter.Workbook('Expenses01.xlsx')
-	worksheet = workbook.add_worksheet()
-	writeHeadingToExcel(worksheet)
+	from openpyxl import Workbook
+	wb = Workbook()
+	ws = wb.active
+	# workbook = xlsxwriter.Workbook(excelFileName)
+	# worksheet = workbook.add_worksheet()
+	writeHeadingToExcel(ws)
 	try:
 		for i in subCategories:
 			for j in subCategories[i]:
@@ -129,9 +175,14 @@ if __name__ == '__main__':
 				newDictionary = dict()
 				for j in dictToWrite:
 					# print(dictToWrite[j])
-					writeToExcel(itemNumber, dictToWrite[j], itemNumber + 1, worksheet)
+					writeToExcel(itemNumber, dictToWrite[j], itemNumber + 1, ws)
 					itemNumber += 1
 					print(itemNumber)
+				if testing:
+					break
 	except KeyboardInterrupt:
 		pass
-	workbook.close()
+	except:
+		 print ("Unexpected error:", sys.exc_info()[0])
+	writeFirstItemToFile(firstItemsEachCategory)
+	wb.save(excelFileName)
