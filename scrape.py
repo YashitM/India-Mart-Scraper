@@ -11,6 +11,13 @@ firstItemsEachCategory = []
 
 listOfProxies = ['http://103.250.147.22:8080', 'http://103.192.64.10:8080', 'http://103.15.62.69:8080', 'http://103.219.192.147:9999', 'http://203.115.102.148:8080', 'http://110.173.183.50:80', 'http://182.74.200.207:80', 'http://110.173.183.63:80', 'http://103.205.15.129:8080', 'http://43.225.23.49:8080', 'http://110.173.183.57:80', 'http://117.202.20.66:555', 'http://27.106.125.21:8080', 'http://45.115.168.40:8080', 'http://111.119.210.10:8080', 'http://45.249.48.124:8080', 'http://45.124.145.34:8080', 'http://103.60.137.2:1', 'http://35.154.138.213:80', 'http://54.202.8.138:80', 'http://206.127.141.67:80', 'http://69.144.49.11:8080', 'http://45.77.132.79:33325', 'http://216.56.48.118:9000', 'http://54.177.186.237:80', 'http://162.243.138.193:80', 'http://47.89.241.103:3128', 'http://67.205.142.183:8080', 'http://47.88.32.46:3128', 'http://24.38.71.43:80', 'http://54.205.31.179:80', 'http://162.223.91.18:3128', 'http://47.88.84.190:8080', 'http://96.85.198.105:53281']
 
+proxyWork = False
+
+prox = {
+	'http' : listOfProxies[0],
+	'https' : listOfProxies[0],
+}
+
 def weather(place):
 	owm = pyowm.OWM('8e47cb932d1448c4049c3506aca77f87')
 	observation = owm.weather_at_place(place)
@@ -21,6 +28,7 @@ def weather(place):
 			return complete_temp[i]
 
 def getCategories():
+	global prox
 	while (True):
 		try:
 			indexOfProxy = randint(0, len(listOfProxies) - 1)
@@ -31,11 +39,14 @@ def getCategories():
 			r = requests.get("https://trade.indiamart.com", proxies=prox)
 			if (r.status_code == 200):
 				r = r.content
+				proxyWork = True
 				break
 		except requests.exceptions.Timeout:
 			print ("Timeout Changing proxy", prox)
+			proxyWork = False
 		except requests.exceptions.ProxyError:
 			print ("Proxy not working", prox)
+			proxyWork = False
 	soup = BeautifulSoup(r, "html.parser")
 	categories_dictionary = dict()
 
@@ -50,21 +61,25 @@ def getCategories():
 	return categories_dictionary
 
 def getSubcategories(categoryName, categoryURL):
+	global prox
 	while (True):
 		try:
-			indexOfProxy = randint(0, len(listOfProxies) - 1)
-			prox = {
-				'http' : listOfProxies[indexOfProxy],
-				'https' : listOfProxies[indexOfProxy],
-			}
+			if proxyWork != True:
+				indexOfProxy = randint(0, len(listOfProxies) - 1)
+				prox = {
+					'http' : listOfProxies[indexOfProxy],
+					'https' : listOfProxies[indexOfProxy],
+				}
 			r = requests.get(categoryURL, proxies=prox)
 			if (r.status_code == 200):
 				r = r.content
 				break
 		except requests.exceptions.Timeout:
 			print ("Timeout Changing proxy", prox)
+			proxyWork = False
 		except requests.exceptions.ProxyError:
 			print ("Proxy not working", prox)
+			proxyWork = False
 	soup = BeautifulSoup(r, "html.parser")
 	print ("[+] Finding Sub Categories of " + categoryName)
 	subCategories_dictionary = dict()
@@ -78,6 +93,7 @@ def getSubcategories(categoryName, categoryURL):
 	return subCategories_dictionary
 
 def getItems(categoryName, subCategoryName, subCategoryURL):
+	global prox
 	data = readFirstItemFromFile()
 	stopSubCat = False
 	firstItem = True
@@ -86,19 +102,22 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 		if page_number == 0:
 			while (True):
 				try:
-					indexOfProxy = randint(0, len(listOfProxies) - 1)
-					prox = {
-						'http' : listOfProxies[indexOfProxy],
-						'https' : listOfProxies[indexOfProxy],
-					}
+					if proxyWork != True:
+						indexOfProxy = randint(0, len(listOfProxies) - 1)
+						prox = {
+							'http' : listOfProxies[indexOfProxy],
+							'https' : listOfProxies[indexOfProxy],
+						}
 					r = requests.get(subCategoryURL, proxies=prox)
 					if (r.status_code == 200):
 						r = r.content
 						break
 				except requests.exceptions.Timeout:
 					print ("Timeout Changing proxy", prox)
+					proxyWork = False
 				except requests.exceptions.ProxyError:
 					print ("Proxy not working", prox)
+					proxyWork = False
 			soup = BeautifulSoup(r, "html.parser")
 		else:
 			if "No Buy Leads" in requests.get(subCategoryURL+"/buy"+str(page_number)+".html").content:
