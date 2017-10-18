@@ -11,6 +11,14 @@ firstItemsEachCategory = []
 
 listOfProxies = ['http://103.250.147.22:8080', 'http://103.192.64.10:8080', 'http://103.15.62.69:8080', 'http://103.219.192.147:9999', 'http://203.115.102.148:8080', 'http://110.173.183.50:80', 'http://182.74.200.207:80', 'http://110.173.183.63:80', 'http://103.205.15.129:8080', 'http://43.225.23.49:8080', 'http://110.173.183.57:80', 'http://117.202.20.66:555', 'http://27.106.125.21:8080', 'http://45.115.168.40:8080', 'http://111.119.210.10:8080', 'http://45.249.48.124:8080', 'http://45.124.145.34:8080', 'http://103.60.137.2:1', 'http://35.154.138.213:80', 'http://54.202.8.138:80', 'http://206.127.141.67:80', 'http://69.144.49.11:8080', 'http://45.77.132.79:33325', 'http://216.56.48.118:9000', 'http://54.177.186.237:80', 'http://162.243.138.193:80', 'http://47.89.241.103:3128', 'http://67.205.142.183:8080', 'http://47.88.32.46:3128', 'http://24.38.71.43:80', 'http://54.205.31.179:80', 'http://162.223.91.18:3128', 'http://47.88.84.190:8080', 'http://96.85.198.105:53281']
 
+def weather(place):
+	owm = pyowm.OWM('8e47cb932d1448c4049c3506aca77f87')
+	observation = owm.weather_at_place(place)
+	w = observation.get_weather()
+	complete_temp = w.get_temperature('celsius') 
+	for i in complete_temp:
+		if(i=="temp"):
+			return complete_temp[i]
 
 def getCategories():
 	while (True):
@@ -108,15 +116,18 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 			frequency = "-"
 			state = "-"
 			country = "-"
+			temperature = "-"
 
 			itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1"}).find("a").text
 			location = div.find("span", {"class": "bl_ccname location"}).text.lstrip().split(",")
 			if len(location) == 1:
 				country = location[0]
+				temperature = weather(country)
 			else:
 				state = location[0]
 				country = location[1]
-				
+				temperature = weather(state + ", " + country)
+
 			date = div.find("span", {"class": "dtt updatedTime"}).text.lstrip()
 			
 			other_details = dict()
@@ -128,6 +139,7 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 			# other_details["Location"] = location
 			other_details["State"] = state
 			other_details["Country"] = country
+			other_details["Temperature"] = temperature
 			other_details["Capacity"] = "-"
 			other_details["Quantity"] = "-"
 			other_details["Quantity Unit"] = "-"
@@ -185,7 +197,7 @@ def writeToExcel(itemNumber, dictToWrite, row, worksheet):
 		j += 1
 
 def writeHeadingToExcel(worksheet):
-	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'State', 'Country', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
+	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'State', 'Country', 'Temperature', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
 	j = 1
 	for i in heading:
 		ws.cell(row = 1, column = j).value = i
