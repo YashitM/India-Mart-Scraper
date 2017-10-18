@@ -13,21 +13,21 @@ listOfProxies = ['http://103.250.147.22:8080', 'http://103.192.64.10:8080', 'htt
 
 
 def getCategories():
-	try:
-		indexOfProxy = randint(0, len(listOfProxies) - 1)
-		prox = {
-			'http' : listOfProxies[indexOfProxy],
-			'https' : listOfProxies[indexOfProxy],
-		}
-		r = requests.get("https://trade.indiamart.com", proxies=prox).content
-	except requests.exceptions.RequestException:
-		print ("here")
-		indexOfProxy = randint(0, len(listOfProxies) - 1)
-		prox = {
-			'http' : listOfProxies[indexOfProxy],
-			'https' : listOfProxies[indexOfProxy],
-		}
-		r = requests.get("https://trade.indiamart.com", proxies=prox).content
+	while (True):
+		try:
+			indexOfProxy = randint(0, len(listOfProxies) - 1)
+			prox = {
+				'http' : listOfProxies[indexOfProxy],
+				'https' : listOfProxies[indexOfProxy],
+			}
+			r = requests.get("https://trade.indiamart.com", proxies=prox)
+			if (r.status_code == 200):
+				r = r.content
+				break
+		except requests.exceptions.Timeout:
+			print ("Timeout Changing proxy", prox)
+		except requests.exceptions.ProxyError:
+			print ("Proxy not working", prox)
 	soup = BeautifulSoup(r, "html.parser")
 	categories_dictionary = dict()
 
@@ -42,20 +42,21 @@ def getCategories():
 	return categories_dictionary
 
 def getSubcategories(categoryName, categoryURL):
-	try:
-		indexOfProxy = randint(0, len(listOfProxies) - 1)
-		prox = {
-			'http' : listOfProxies[indexOfProxy],
-			'https' : listOfProxies[indexOfProxy],
-		}
-		r = requests.get(categoryURL, proxies=prox).content
-	except requests.exceptions.Timeout:
-		indexOfProxy = randint(0, len(listOfProxies) - 1)
-		prox = {
-			'http' : listOfProxies[indexOfProxy],
-			'https' : listOfProxies[indexOfProxy],
-		}
-		r = requests.get(categoryURL, proxies=prox).content
+	while (True):
+		try:
+			indexOfProxy = randint(0, len(listOfProxies) - 1)
+			prox = {
+				'http' : listOfProxies[indexOfProxy],
+				'https' : listOfProxies[indexOfProxy],
+			}
+			r = requests.get(categoryURL, proxies=prox)
+			if (r.status_code == 200):
+				r = r.content
+				break
+		except requests.exceptions.Timeout:
+			print ("Timeout Changing proxy", prox)
+		except requests.exceptions.ProxyError:
+			print ("Proxy not working", prox)
 	soup = BeautifulSoup(r, "html.parser")
 	print ("[+] Finding Sub Categories of " + categoryName)
 	subCategories_dictionary = dict()
@@ -75,20 +76,21 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 	page_number = 0
 	while True:
 		if page_number == 0:
-			try:
-				indexOfProxy = randint(0, len(listOfProxies) - 1)
-				prox = {
-					'http' : listOfProxies[indexOfProxy],
-					'https' : listOfProxies[indexOfProxy],
-				}
-				r = requests.get(subCategoryURL, proxies=prox).content
-			except requests.exceptions.Timeout:
-				indexOfProxy = randint(0, len(listOfProxies) - 1)
-				prox = {
-					'http' : listOfProxies[indexOfProxy],
-					'https' : listOfProxies[indexOfProxy],
-				}
-				r = requests.get(subCategoryURL, proxies=prox).content
+			while (True):
+				try:
+					indexOfProxy = randint(0, len(listOfProxies) - 1)
+					prox = {
+						'http' : listOfProxies[indexOfProxy],
+						'https' : listOfProxies[indexOfProxy],
+					}
+					r = requests.get(subCategoryURL, proxies=prox)
+					if (r.status_code == 200):
+						r = r.content
+						break
+				except requests.exceptions.Timeout:
+					print ("Timeout Changing proxy", prox)
+				except requests.exceptions.ProxyError:
+					print ("Proxy not working", prox)
 			soup = BeautifulSoup(r, "html.parser")
 		else:
 			if "No Buy Leads" in requests.get(subCategoryURL+"/buy"+str(page_number)+".html").content:
