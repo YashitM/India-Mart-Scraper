@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import sys
 import urllib.parse
 import json
+from random import randint
 # Change it to false to run the script completely
 testing = True
 # FileName of excel file
@@ -11,6 +12,9 @@ excelFileName = "Archived_ExcelFile.xlsx"
 firstItemsEachCategory = []
 
 baseURL = "https://trade.indiamart.com/buyersearch.mp?ss="
+
+listOfProxies = ['http://103.250.147.22:8080', 'http://103.192.64.10:8080', 'http://103.15.62.69:8080', 'http://103.219.192.147:9999', 'http://203.115.102.148:8080', 'http://110.173.183.50:80', 'http://182.74.200.207:80', 'http://110.173.183.63:80', 'http://103.205.15.129:8080', 'http://43.225.23.49:8080', 'http://110.173.183.57:80', 'http://117.202.20.66:555', 'http://27.106.125.21:8080', 'http://45.115.168.40:8080', 'http://111.119.210.10:8080', 'http://45.249.48.124:8080', 'http://45.124.145.34:8080', 'http://103.60.137.2:1', 'http://35.154.138.213:80', 'http://54.202.8.138:80', 'http://206.127.141.67:80', 'http://69.144.49.11:8080', 'http://45.77.132.79:33325', 'http://216.56.48.118:9000', 'http://54.177.186.237:80', 'http://162.243.138.193:80', 'http://47.89.241.103:3128', 'http://67.205.142.183:8080', 'http://47.88.32.46:3128', 'http://24.38.71.43:80', 'http://54.205.31.179:80', 'http://162.223.91.18:3128', 'http://47.88.84.190:8080', 'http://96.85.198.105:53281']
+
 
 def getItems(categoryName, subCategoryName, subCategoryURL):
 	data = readFirstItemFromFile()
@@ -24,7 +28,22 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 		# 	if "No Buy Leads" in str(requests.get(subCategoryURL+"/buy"+str(page_number)+".html").content):
 		# 		break
 	x = urllib.parse.quote_plus(subCategoryName)
-	soup = BeautifulSoup(requests.get(baseURL+x).content, "html.parser")
+	while (True):
+		try:
+			indexOfProxy = randint(0, len(listOfProxies) - 1)
+			prox = {
+				'http' : listOfProxies[indexOfProxy],
+				'https' : listOfProxies[indexOfProxy],
+			}
+			r = requests.get(baseURL+x, proxies=prox)
+			if (r.status_code == 200):
+				r = r.content
+				break
+		except requests.exceptions.Timeout:
+			print ("Timeout Changing proxy", prox)
+		except requests.exceptions.ProxyError:
+			print ("Proxy not working", prox)
+	soup = BeautifulSoup(r, "html.parser")
 	print ("[+] Getting items in " + categoryName + "->" + subCategoryName + str(page_number))
 	itemDiv = soup.find_all("div", {"class": "trade-list"})
 	# itemDiv = soup.find_all("div", {"class": "trade-list"})
@@ -55,7 +74,9 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 		other_details["Category"] = categoryName
 		other_details["Sub Category"] = subCategoryName
 		other_details["Item"] = itemName
-		other_details["Location"] = location
+		# other_details["Location"] = location
+		other_details["State"] = state
+		other_details["Country"] = country
 		other_details["Capacity"] = "-"
 		other_details["Quantity"] = "-"
 		other_details["Quantity Unit"] = "-"
