@@ -57,9 +57,17 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 			quantity = "-"
 			need_for_this = "-"
 			frequency = "-"
+			state = "-"
+			country = "-"
 
 			itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1"}).find("a").text
-			location = div.find("span", {"class": "bl_ccname location"}).text.lstrip()
+			location = div.find("span", {"class": "bl_ccname location"}).text.lstrip().split(",")
+			if len(location) == 1:
+				country = location[0]
+			else:
+				state = location[0]
+				country = location[1]
+				
 			date = div.find("span", {"class": "dtt updatedTime"}).text.lstrip()
 			
 			other_details = dict()
@@ -68,7 +76,9 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 			other_details["Category"] = categoryName
 			other_details["Sub Category"] = subCategoryName
 			other_details["Item"] = itemName
-			other_details["Location"] = location
+			# other_details["Location"] = location
+			other_details["State"] = state
+			other_details["Country"] = country
 			other_details["Capacity"] = "-"
 			other_details["Quantity"] = "-"
 			other_details["Quantity Unit"] = "-"
@@ -126,7 +136,7 @@ def writeToExcel(itemNumber, dictToWrite, row, worksheet):
 		j += 1
 
 def writeHeadingToExcel(worksheet):
-	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'Location', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
+	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'State', 'Country', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
 	j = 1
 	for i in heading:
 		ws.cell(row = 1, column = j).value = i

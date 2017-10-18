@@ -4,7 +4,7 @@ import sys
 import urllib.parse
 import json
 # Change it to false to run the script completely
-testing = False
+testing = True
 # FileName of excel file
 excelFileName = "Archived_ExcelFile.xlsx"
 
@@ -36,9 +36,17 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 		quantity = "-"
 		need_for_this = "-"
 		frequency = "-"
+		state = "-"
+		country = "-"
 
 		itemName = div.find("div",{"class": "d_lm"}).find("p",{"class": "d_f1"}).find("a").text
-		location = div.find("span", {"class": "bl_ccname location"}).text.lstrip()
+		location = div.find("span", {"class": "bl_ccname location"}).text.lstrip().split(",")
+		if len(location) == 1:
+			country = location[0]
+		else:
+			state = location[0]
+			country = location[1]
+
 		date = div.find("span", {"class": "dtt updatedTime"}).text.lstrip()
 		
 		other_details = dict()
@@ -104,7 +112,7 @@ def writeToExcel(itemNumber, dictToWrite, row, worksheet):
 		j += 1
 
 def writeHeadingToExcel(worksheet):
-	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'Location', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
+	heading = ['S.No', 'Date', 'Category', 'Sub Category', 'Item', 'State', 'Country', 'Capacity', 'Quantity', 'Quantity Unit', 'Need for this/usage', 'Frequency']
 	j = 1
 	for i in heading:
 		ws.cell(row = 1, column = j).value = i
