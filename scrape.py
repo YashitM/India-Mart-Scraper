@@ -47,6 +47,9 @@ def getCategories():
 		except requests.exceptions.ProxyError:
 			print ("Proxy not working", prox)
 			proxyWork = False
+		except requests.exceptions.ConnectionError:
+			print ("Proxy not working", prox)
+			proxyWork = False
 	soup = BeautifulSoup(r, "html.parser")
 	categories_dictionary = dict()
 
@@ -78,6 +81,9 @@ def getSubcategories(categoryName, categoryURL):
 			print ("Timeout Changing proxy", prox)
 			proxyWork = False
 		except requests.exceptions.ProxyError:
+			print ("Proxy not working", prox)
+			proxyWork = False
+		except requests.exceptions.ConnectionError:
 			print ("Proxy not working", prox)
 			proxyWork = False
 	soup = BeautifulSoup(r, "html.parser")
@@ -118,6 +124,9 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 				except requests.exceptions.ProxyError:
 					print ("Proxy not working", prox)
 					proxyWork = False
+				except requests.exceptions.ConnectionError:
+				print ("Proxy not working", prox)
+				proxyWork = False
 			soup = BeautifulSoup(r, "html.parser")
 		else:
 			if "No Buy Leads" in requests.get(subCategoryURL+"/buy"+str(page_number)+".html").content:

@@ -52,6 +52,8 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 			print ("Timeout Changing proxy", prox)
 		except requests.exceptions.ProxyError:
 			print ("Proxy not working", prox)
+		except requests.exceptions.ConnectionError:
+			print ("Proxy not working", prox)
 	soup = BeautifulSoup(r, "html.parser")
 	print ("[+] Getting items in " + categoryName + "->" + subCategoryName + str(page_number))
 	itemDiv = soup.find_all("div", {"class": "trade-list"})
