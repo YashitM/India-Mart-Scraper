@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from random import randint
+import pyowm
 
 # Change it to false to run the script completely
 testing = True
@@ -51,6 +52,7 @@ def weather(place):
 
 def getCategories():
 	global prox
+	global proxyWork
 	while (True):
 		try:
 			indexOfProxy = randint(0, len(listOfProxies) - 1)
@@ -129,6 +131,7 @@ def getSubcategories(categoryName, categoryURL):
 
 def getItems(categoryName, subCategoryName, subCategoryURL):
 	global prox
+	global proxyWork
 	data = readFirstItemFromFile()
 	stopSubCat = False
 	firstItem = True
