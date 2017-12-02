@@ -7,6 +7,8 @@ import pyowm
 from random import randint
 # Change it to false to run the script completely
 testing = True
+# Change for proxy
+useProxy = False
 # FileName of excel file
 excelFileName = "Archived_ExcelFile.xlsx"
 

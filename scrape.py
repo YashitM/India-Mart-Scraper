@@ -5,7 +5,7 @@ from random import randint
 # Change it to false to run the script completely
 testing = True
 # Change to not use proxy
-useProxy = True
+useProxy = False
 # FileName of excel file
 excelFileName = "ExcelFile.xlsx"
 
