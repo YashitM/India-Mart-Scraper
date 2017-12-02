@@ -4,31 +4,34 @@ from random import randint
 
 # Change it to false to run the script completely
 testing = True
+# Change to not use proxy
+useProxy = True
 # FileName of excel file
 excelFileName = "ExcelFile.xlsx"
 
 firstItemsEachCategory = []
 
 # listOfProxies = ['http://103.250.147.22:8080', 'http://103.192.64.10:8080', 'http://103.15.62.69:8080', 'http://103.219.192.147:9999', 'http://203.115.102.148:8080', 'http://110.173.183.50:80', 'http://182.74.200.207:80', 'http://110.173.183.63:80', 'http://103.205.15.129:8080', 'http://43.225.23.49:8080', 'http://110.173.183.57:80', 'http://117.202.20.66:555', 'http://27.106.125.21:8080', 'http://45.115.168.40:8080', 'http://111.119.210.10:8080', 'http://45.249.48.124:8080', 'http://45.124.145.34:8080', 'http://103.60.137.2:1', 'http://35.154.138.213:80', 'http://54.202.8.138:80', 'http://206.127.141.67:80', 'http://69.144.49.11:8080', 'http://45.77.132.79:33325', 'http://216.56.48.118:9000', 'http://54.177.186.237:80', 'http://162.243.138.193:80', 'http://47.89.241.103:3128', 'http://67.205.142.183:8080', 'http://47.88.32.46:3128', 'http://24.38.71.43:80', 'http://54.205.31.179:80', 'http://162.223.91.18:3128', 'http://47.88.84.190:8080', 'http://96.85.198.105:53281']
-listOfProxies = ['http://143.0.188.8:80',
-				 'http://139.59.47.12:3128',
-				 'http://201.16.197.16:80',
-				 'http://35.196.238.100:80',
-				 'http://104.155.86.227:80',
-				 'http://14.141.216.6:3128',
-				 'http://118.69.140.108:53281',
-				 'http://192.237.153.73:8080',
-				 'http://45.77.153.228:55555',
-				 'http://138.0.155.196:8080',
-				 'http://203.74.4.2:80',
-				 'http://203.74.4.7:80',
-				 'http://35.195.221.39:80',
-				 'http://45.6.216.66:3128',
-				 'http://203.58.117.34:80',
-				 'http://13.115.220.171:8080',
-				 'http://87.98.157.128:3128',
-				 'http://52.164.244.34:8080',
-				 'http://45.76.88.240:3128',]
+listOfProxies = ['199.116.113.206:8080',
+'190.147.208.143:8080',
+'183.88.232.207:8080',
+'150.242.108.42:8080',
+'184.178.217.66:3128',
+'117.3.69.163:8080',
+'159.203.1.72:8080',
+'197.210.185.246:8080',
+'46.101.44.59:8118',
+'185.148.220.11:8081',
+'158.69.31.45:80',
+'101.50.1.2:80',
+'180.250.19.92:3128',
+'82.107.202.30:8080',
+'197.210.252.39:8080',
+'159.224.83.100:8080',
+'94.230.243.6:8080',
+'188.230.19.33:8080',
+'177.136.115.162:666',
+'197.211.54.50:8080']
 
 proxyWork = False
 
@@ -55,7 +58,10 @@ def getCategories():
 				'http' : listOfProxies[indexOfProxy],
 				'https' : listOfProxies[indexOfProxy],
 			}
-			r = requests.get("https://trade.indiamart.com", proxies=prox)
+			if useProxy:
+				r = requests.get("https://trade.indiamart.com", proxies=prox)
+			else:
+				r = requests.get("https://trade.indiamart.com")
 			if (r.status_code == 200):
 				r = r.content
 				proxyWork = True
@@ -84,6 +90,7 @@ def getCategories():
 
 def getSubcategories(categoryName, categoryURL):
 	global prox
+	global proxyWork
 	while (True):
 		try:
 			if proxyWork != True:
@@ -92,7 +99,10 @@ def getSubcategories(categoryName, categoryURL):
 					'http' : listOfProxies[indexOfProxy],
 					'https' : listOfProxies[indexOfProxy],
 				}
-			r = requests.get(categoryURL, proxies=prox)
+			if useProxy:
+				r = requests.get(categoryURL, proxies=prox)
+			else:
+				r = requests.get(categoryURL)
 			if (r.status_code == 200):
 				r = r.content
 				break
@@ -133,7 +143,10 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 							'http' : listOfProxies[indexOfProxy],
 							'https' : listOfProxies[indexOfProxy],
 						}
-					r = requests.get(subCategoryURL, proxies=prox)
+					if useProxy:
+						r = requests.get(subCategoryURL, proxies=prox)
+					else:
+						r = requests.get(subCategoryURL)
 					if (r.status_code == 200):
 						r = r.content
 						break

@@ -63,7 +63,10 @@ def getItems(categoryName, subCategoryName, subCategoryURL):
 				'http' : listOfProxies[indexOfProxy],
 				'https' : listOfProxies[indexOfProxy],
 			}
-			r = requests.get(baseURL+x, proxies=prox)
+			if useProxy:
+				r = requests.get(baseURL+x, proxies=prox)
+			else:
+				r = requests.get(baseURL+x)
 			if (r.status_code == 200):
 				r = r.content
 				break
