@@ -39,7 +39,10 @@ listOfProxies = ['http://143.0.188.8:80',
 				 
 def weather(place):
 	owm = pyowm.OWM('8e47cb932d1448c4049c3506aca77f87')
-	observation = owm.weather_at_place(place)
+	try:
+		observation = owm.weather_at_place(place)
+	except pyowm.exceptions.not_found_error.NotFoundError:
+		return ""
 	w = observation.get_weather()
 	complete_temp = w.get_temperature('celsius') 
 	for i in complete_temp:
@@ -232,9 +235,13 @@ if __name__ == '__main__':
 				if testing:
 					break
 	except KeyboardInterrupt:
-		pass
-	# except:
-	# 	 print ("Unexpected error:", sys.exc_info()[0])
+		wb = load_workbook(filename = excelFileName)
+		ws = wb.get_active_sheet()
+		writeFirstItemToFile(firstItemsEachCategory)
+		wb.save(excelFileName)
+		sys.exit()
+	except:
+		print ("Unexpected error:", sys.exc_info()[0])
 	wb = load_workbook(filename = excelFileName)
 	ws = wb.get_active_sheet()
 	writeFirstItemToFile(firstItemsEachCategory)

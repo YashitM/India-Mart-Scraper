@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from random import randint
 import pyowm
+import sys
 
 # Change it to false to run the script completely
 testing = True
@@ -132,7 +133,10 @@ def getSubcategories(categoryName, categoryURL):
 def getItems(categoryName, subCategoryName, subCategoryURL):
 	global prox
 	global proxyWork
-	data = readFirstItemFromFile()
+	try:
+		data = readFirstItemFromFile()
+	except:
+		data = []
 	stopSubCat = False
 	firstItem = True
 	page_number = 0
@@ -274,11 +278,8 @@ def writeFirstItemToFile(firstItemList):
 def readFirstItemFromFile():
 	import pickle
 	data = []
-	try:
-		with open("firstItemHelper.txt", "wb") as fp:
-			data = pickle.load(fp)
-	except:
-		pass
+	with open("firstItemHelper.txt", "wb") as fp:
+		data = pickle.load(fp)
 	return data
 
 if __name__ == '__main__':
@@ -312,7 +313,9 @@ if __name__ == '__main__':
 				if testing:
 					break
 	except KeyboardInterrupt:
-		pass
+		writeFirstItemToFile(firstItemsEachCategory)
+		wb.save(excelFileName)
+		sys.exit()
 	except:
 		 print ("Unexpected error:", sys.exc_info()[0])
 	writeFirstItemToFile(firstItemsEachCategory)
